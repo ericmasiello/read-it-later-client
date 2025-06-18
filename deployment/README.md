@@ -283,3 +283,7 @@ To add a custom domain, you'll need:
 3. Additional configuration in the CDK script
 
 This setup provides a robust, scalable deployment for your React application with proper routing support and global CDN distribution.
+
+# Troubleshooting Tips
+
+If at any point you get stuck, particularly when running `cdk deploy`, take the output and paste it into an LLM like like Gemini. It is very good at troubleshooting these errors.
