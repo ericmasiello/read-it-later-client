@@ -68,7 +68,4 @@ jobs:
 
       - name: Output CloudFront URL
         if: always()
-        run: |
-          const fs = require('fs');
-          const output = fs.readFileSync('cdk-deploy-output.txt', 'utf8');
-          console.log('CDK Deploy Output:\n', output);
+        run: cat cdk-deploy-output.txt
