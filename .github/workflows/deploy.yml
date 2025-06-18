@@ -48,21 +48,27 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           ENVIRONMENT: pr-${{ github.event.pull_request.number }}
-        id: deploy_preview
         run: |
           cd deployment
           npx cdk deploy --require-approval never -c environment=${ENVIRONMENT} | tee ../cdk-deploy-output.txt
 
-      - name: Comment PR with Deploy Preview Output
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('cdk-deploy-output.txt', 'utf8');
-            github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🚀 **CDK Deploy Output:**\n\n\n\`\`\`\n${output}\n\`\`\``
-            })
+      # - name: Comment PR with Deploy Preview Output
+      #   if: github.event_name == 'pull_request'
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       const fs = require('fs');
+      #       const output = fs.readFileSync('cdk-deploy-output.txt', 'utf8');
+      #       github.rest.issues.createComment({
+      #         issue_number: context.payload.pull_request.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: `🚀 **CDK Deploy Output:**\n\n\n\`\`\`\n${output}\n\`\`\``
+      #       })
+
+      - name: Output CloudFront URL
+        if: always()
+        run: |
+          const fs = require('fs');
+          const output = fs.readFileSync('cdk-deploy-output.txt', 'utf8');
+          console.log('CDK Deploy Output:\n', output);
