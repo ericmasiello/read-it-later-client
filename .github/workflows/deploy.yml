@@ -28,6 +28,9 @@ jobs:
         run: npm ci
         working-directory: deployment
 
+      - name: Build React app
+        run: npm run build
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -47,10 +50,8 @@ jobs:
           ENVIRONMENT: pr-${{ github.event.pull_request.number }}
         run: |
           cd deployment
-          npx cdk deploy --require-approval never -c environment=${ENVIRONMENT}
+          npx cdk deploy --require-approval never -c environment=${ENVIRONMENT} | tee ../cdk-deploy-output.txt      
 
       - name: Output CloudFront URL
         if: always()
-        run: |
-          cd deployment
-          npx cdk output
+        run: cat cdk-deploy-output.txt
